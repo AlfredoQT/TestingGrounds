@@ -11,6 +11,7 @@
  */
 
 class UBlackboardComponent;
+class UPatrolRouteComponent;
 
 UCLASS()
 class TESTINGGROUNDS_API UChooseNextWaypoint : public UBTTaskNode
@@ -18,7 +19,7 @@ class TESTINGGROUNDS_API UChooseNextWaypoint : public UBTTaskNode
 	GENERATED_BODY()
 public:
     virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-    void GetPatrolPoints(APawn* AIPawn);
+    void GetPatrolPoints(UPatrolRouteComponent* PatrolRouteComponent);
     int32 SetNewWaypoint(UBlackboardComponent* BlackboardComponent);
     void CycleIndex(UBlackboardComponent* BlackboardComponent, int32 IndexToIncrement);
 private:
