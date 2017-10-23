@@ -32,6 +32,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Weapon")
     void PullTrigger();
     
+    UFUNCTION(BlueprintCallable, Category = "Death")
+    void Death();
+    
 private:
     /** Pawn mesh: 1st person view (arms; seen only by self) */
     UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
