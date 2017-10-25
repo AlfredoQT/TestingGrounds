@@ -16,6 +16,10 @@ UCLASS()
 class TESTINGGROUNDS_API AInfiniteTerrainGameMode : public ATestingGroundsGameMode
 {
 	GENERATED_BODY()
+    
+public:
+    
+    AInfiniteTerrainGameMode();
 	
 private:
     
@@ -25,4 +29,9 @@ public:
     
     UFUNCTION(BlueprintCallable, Category = "Pool")
     void PopulateBoundsVolumePool();
+    
+protected:
+    
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pool")
+    class UActorPool* Pool;
 };

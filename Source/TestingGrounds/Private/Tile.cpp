@@ -2,6 +2,7 @@
 
 #include "Tile.h"
 #include "DrawDebugHelpers.h"
+#include "ActorPool.h"
 
 // Sets default values
 ATile::ATile()
@@ -71,4 +72,9 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
     // FColor ResultColor = (HasHit) ? FColor(255, 0, 0) : FColor(0, 255, 0);
     // DrawDebugCapsule(GetWorld(), GlobalLocation, 0.f, Radius, FQuat::Identity, ResultColor);
     return !HasHit;
+}
+
+void ATile::SetPool(UActorPool* InPool)
+{
+    Pool = InPool;
 }
