@@ -42,6 +42,15 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSp
     }
 }
 
+void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float Radius)
+{
+    TArray<FSpawnPosition> GeneratedPoints = SpawnPointGenerator(MinSpawn, MaxSpawn, Radius);
+    for (auto& SpawnPosition : GeneratedPoints)
+    {
+        PlaceAIPawn(ToSpawn, SpawnPosition);
+    }
+}
+
 TArray<FSpawnPosition> ATile::SpawnPointGenerator(int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
 {
     TArray<FSpawnPosition> GeneratedPoints;
@@ -83,6 +92,17 @@ void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnP
     // We only want to rotate it in the azimuth
     Spawned->SetActorRotation(FRotator(0.f, SpawnPosition.Rotation, 0.f));
     Spawned->SetActorScale3D(FVector(SpawnPosition.Scale));
+}
+
+void ATile::PlaceAIPawn(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition)
+{
+    APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
+    Spawned->SetActorRelativeLocation(SpawnPosition.Location);
+    Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+    // We only want to rotate it in the azimuth
+    Spawned->SetActorRotation(FRotator(0.f, SpawnPosition.Rotation, 0.f));
+    Spawned->SpawnDefaultController();
+    Spawned->Tags.Add(FName("Enemy"));
 }
 
 // Called when the game starts or when spawned

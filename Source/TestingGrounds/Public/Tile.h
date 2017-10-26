@@ -29,6 +29,9 @@ public:
     
     UFUNCTION(BlueprintCallable, Category = "Spawn")
     void PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn = 1, int32 MaxSpawn = 1, float Radius = 500.f, float MinScale = 1, float MaxScale = 1);
+    UFUNCTION(BlueprintCallable, Category = "Spawn")
+    void PlaceAIPawns(TSubclassOf<APawn> ToSpawn, int32 MinSpawn = 1, int32 MaxSpawn = 1, float Radius = 500.f);
+    
 
 protected:
 	// Called when the game starts or when spawned
@@ -55,9 +58,11 @@ private:
     
     void PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnPosition);
     
+    void PlaceAIPawn(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition);
+    
     UActorPool* Pool;
     
     AActor* NavMeshBoundsVolume;
 	
-    TArray<FSpawnPosition> SpawnPointGenerator(int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale, float MaxScale);
+    TArray<FSpawnPosition> SpawnPointGenerator(int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale = 1, float MaxScale = 1);
 };
