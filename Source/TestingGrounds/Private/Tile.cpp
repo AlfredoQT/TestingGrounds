@@ -79,17 +79,19 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
     return !HasHit;
 }
 
-void ATile::PositionNavMeshBoundsVolume(UActorPool* Pool) {
+void ATile::PositionNavMeshBoundsVolume() {
     NavMeshBoundsVolume = Pool->Checkout();
-    if (NavMeshBoundsVolume == nullptr) {
+    if (NavMeshBoundsVolume == nullptr)
+    {
         UE_LOG(LogTemp, Warning, TEXT("No elements in pool to checkout"));
         return;
     }
+    UE_LOG(LogTemp, Warning, TEXT("Got [%s]"), *NavMeshBoundsVolume->GetName());
     NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
 }
 
 void ATile::SetPool(UActorPool* InPool)
 {
     Pool = InPool;
-    PositionNavMeshBoundsVolume(Pool);
+    PositionNavMeshBoundsVolume();
 }

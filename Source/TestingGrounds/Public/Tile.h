@@ -36,7 +36,7 @@ private:
     
     bool CanSpawnAtLocation(FVector Location, float Radius);
     
-    void PositionNavMeshBoundsVolume(UActorPool* Pool);
+    void PositionNavMeshBoundsVolume();
 	
     bool FindEmptyLocation(FVector& OutLocation, float Radius);
     

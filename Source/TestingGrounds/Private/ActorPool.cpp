@@ -10,30 +10,24 @@ UActorPool::UActorPool()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+    Pool = TArray<AActor*>();
 }
 
 AActor* UActorPool::Checkout()
 {
-    return nullptr;
+    if (Pool.Num() == 0)
+    {
+        return nullptr;
+    }
+    return Pool.Pop();
 }
 
 void UActorPool::Return(AActor* ActorToReturn)
 {
-    if (ActorToReturn == nullptr)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Actor returned: INVALID"));
-        return;
-    }
-    UE_LOG(LogTemp, Warning, TEXT("Actor returned: %s"), *ActorToReturn->GetName());
+    Add(ActorToReturn);
 }
 
 void UActorPool::Add(AActor* ActorToAdd)
 {
-    if (ActorToAdd == nullptr)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Actor added: INVALID"));
-        return;
-    }
-    UE_LOG(LogTemp, Warning, TEXT("Actor added: %s"), *ActorToAdd->GetName());
+    Pool.Push(ActorToAdd);
 }
