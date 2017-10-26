@@ -20,10 +20,20 @@ AActor* UActorPool::Checkout()
 
 void UActorPool::Return(AActor* ActorToReturn)
 {
-    
+    if (ActorToReturn == nullptr)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Actor returned: INVALID"));
+        return;
+    }
+    UE_LOG(LogTemp, Warning, TEXT("Actor returned: %s"), *ActorToReturn->GetName());
 }
 
 void UActorPool::Add(AActor* ActorToAdd)
 {
-    
+    if (ActorToAdd == nullptr)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Actor added: INVALID"));
+        return;
+    }
+    UE_LOG(LogTemp, Warning, TEXT("Actor added: %s"), *ActorToAdd->GetName());
 }

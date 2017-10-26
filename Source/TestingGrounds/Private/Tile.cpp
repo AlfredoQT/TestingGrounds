@@ -18,6 +18,11 @@ void ATile::BeginPlay()
 	Super::BeginPlay();
 }
 
+void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Pool->Return(NavMeshBoundsVolume);
+}
+
 // Called every frame
 void ATile::Tick(float DeltaTime)
 {
@@ -74,7 +79,17 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
     return !HasHit;
 }
 
+void ATile::PositionNavMeshBoundsVolume(UActorPool* Pool) {
+    NavMeshBoundsVolume = Pool->Checkout();
+    if (NavMeshBoundsVolume == nullptr) {
+        UE_LOG(LogTemp, Warning, TEXT("No elements in pool to checkout"));
+        return;
+    }
+    NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
+}
+
 void ATile::SetPool(UActorPool* InPool)
 {
     Pool = InPool;
+    PositionNavMeshBoundsVolume(Pool);
 }
