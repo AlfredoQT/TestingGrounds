@@ -3,30 +3,34 @@
 #include "Tile.h"
 #include "DrawDebugHelpers.h"
 #include "ActorPool.h"
+#include "AI/Navigation/NavigationSystem.h"
 
 // Sets default values
 ATile::ATile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+    NavigationBoundsOffset = FVector(2000.f, 0.f, 0.f);
 
 }
 
-// Called when the game starts or when spawned
-void ATile::BeginPlay()
+void ATile::SetPool(UActorPool* InPool)
 {
-	Super::BeginPlay();
+    Pool = InPool;
+    PositionNavMeshBoundsVolume();
 }
 
-void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void ATile::PositionNavMeshBoundsVolume()
 {
-    Pool->Return(NavMeshBoundsVolume);
-}
-
-// Called every frame
-void ATile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+    NavMeshBoundsVolume = Pool->Checkout();
+    if (NavMeshBoundsVolume == nullptr)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No elements in pool to checkout"));
+        return;
+    }
+    UE_LOG(LogTemp, Warning, TEXT("Got [%s]"), *NavMeshBoundsVolume->GetName());
+    NavMeshBoundsVolume->SetActorLocation(GetActorLocation() + NavigationBoundsOffset);
+    GetWorld()->GetNavigationSystem()->Build();
 }
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
@@ -69,6 +73,23 @@ void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, FVector SpawnPoint, float Ro
     Spawned->SetActorScale3D(FVector(Scale));
 }
 
+// Called when the game starts or when spawned
+void ATile::BeginPlay()
+{
+    Super::BeginPlay();
+}
+
+void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Pool->Return(NavMeshBoundsVolume);
+}
+
+// Called every frame
+void ATile::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+}
+
 bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
 {
     FHitResult HitResult;
@@ -77,21 +98,4 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
     // FColor ResultColor = (HasHit) ? FColor(255, 0, 0) : FColor(0, 255, 0);
     // DrawDebugCapsule(GetWorld(), GlobalLocation, 0.f, Radius, FQuat::Identity, ResultColor);
     return !HasHit;
-}
-
-void ATile::PositionNavMeshBoundsVolume() {
-    NavMeshBoundsVolume = Pool->Checkout();
-    if (NavMeshBoundsVolume == nullptr)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No elements in pool to checkout"));
-        return;
-    }
-    UE_LOG(LogTemp, Warning, TEXT("Got [%s]"), *NavMeshBoundsVolume->GetName());
-    NavMeshBoundsVolume->SetActorLocation(GetActorLocation());
-}
-
-void ATile::SetPool(UActorPool* InPool)
-{
-    Pool = InPool;
-    PositionNavMeshBoundsVolume();
 }

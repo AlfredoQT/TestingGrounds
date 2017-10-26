@@ -33,5 +33,5 @@ public:
 protected:
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pool")
-    class UActorPool* Pool;
+    class UActorPool* BoundsVolumePool;
 };

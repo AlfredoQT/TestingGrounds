@@ -7,20 +7,19 @@
 
 AInfiniteTerrainGameMode::AInfiniteTerrainGameMode()
 {
-    Pool = CreateDefaultSubobject<UActorPool>(TEXT("Pool"));
+    BoundsVolumePool = CreateDefaultSubobject<UActorPool>(TEXT("Bounds Volume Pool"));
 }
 
 void AInfiniteTerrainGameMode::AddToPool(ANavMeshBoundsVolume* BoundsVolume)
 {
-    Pool->Add(BoundsVolume);
+    BoundsVolumePool->Add(BoundsVolume);
 }
 
 void AInfiniteTerrainGameMode::PopulateBoundsVolumePool()
 {
     TActorIterator<ANavMeshBoundsVolume> BoundsVolumeIterator = TActorIterator<ANavMeshBoundsVolume>(GetWorld());
     while (BoundsVolumeIterator) {
-        ANavMeshBoundsVolume* BoundsVolume = *BoundsVolumeIterator;
-        AddToPool(BoundsVolume);
+        AddToPool(*BoundsVolumeIterator);
         ++BoundsVolumeIterator;
     }
 }
