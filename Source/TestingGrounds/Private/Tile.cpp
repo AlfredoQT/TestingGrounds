@@ -35,25 +35,17 @@ void ATile::PositionNavMeshBoundsVolume()
 
 void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
 {
-    TArray<FSpawnPosition> GeneratedPoints = SpawnPointGenerator(MinSpawn, MaxSpawn, Radius, MinScale, MaxScale);
-    for (auto& SpawnPosition : GeneratedPoints)
-    {
-        PlaceActor(ToSpawn, SpawnPosition);
-    }
+    RandomlyPlaceActors(ToSpawn, MinSpawn, MaxSpawn, Radius, MinScale, MaxScale);
 }
 
 void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float Radius)
 {
-    TArray<FSpawnPosition> GeneratedPoints = SpawnPointGenerator(MinSpawn, MaxSpawn, Radius);
-    for (auto& SpawnPosition : GeneratedPoints)
-    {
-        PlaceAIPawn(ToSpawn, SpawnPosition);
-    }
+    RandomlyPlaceActors(ToSpawn, MinSpawn, MaxSpawn, Radius);
 }
 
-TArray<FSpawnPosition> ATile::SpawnPointGenerator(int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
+template<class T>
+void ATile::RandomlyPlaceActors(TSubclassOf<T> ToSpawn, int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale, float MaxScale)
 {
-    TArray<FSpawnPosition> GeneratedPoints;
     int32 NumberToSpawn = FMath::RandRange(MinSpawn, MaxSpawn);
     for (int32 Index = 0; Index != NumberToSpawn; Index++)
     {
@@ -62,10 +54,9 @@ TArray<FSpawnPosition> ATile::SpawnPointGenerator(int32 MinSpawn, int32 MaxSpawn
         bool found = FindEmptyLocation(SpawnPosition.Location, Radius * SpawnPosition.Scale);
         if (found) {
             SpawnPosition.Rotation = FMath::RandRange(-180.f, 180.f);
-            GeneratedPoints.Add(SpawnPosition);
+            PlaceActor(ToSpawn, SpawnPosition);
         }
     }
-    return GeneratedPoints;
 }
 
 bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
@@ -94,7 +85,7 @@ void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnP
     Spawned->SetActorScale3D(FVector(SpawnPosition.Scale));
 }
 
-void ATile::PlaceAIPawn(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition)
+void ATile::PlaceActor(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition)
 {
     APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
     Spawned->SetActorRelativeLocation(SpawnPosition.Location);

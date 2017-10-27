@@ -58,11 +58,12 @@ private:
     
     void PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnPosition);
     
-    void PlaceAIPawn(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition);
+    void PlaceActor(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition);
     
     UActorPool* Pool;
     
     AActor* NavMeshBoundsVolume;
-	
-    TArray<FSpawnPosition> SpawnPointGenerator(int32 MinSpawn, int32 MaxSpawn, float Radius, float MinScale = 1, float MaxScale = 1);
+    
+    template<class T>
+    void RandomlyPlaceActors(TSubclassOf<T> ToSpawn, int32 MinSpawn = 1, int32 MaxSpawn = 1, float Radius = 500.f, float MinScale = 1, float MaxScale = 1);
 };
