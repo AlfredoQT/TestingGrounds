@@ -78,6 +78,7 @@ bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
 void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnPosition)
 {
     AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
+    if (Spawned == nullptr) return;
     Spawned->SetActorRelativeLocation(SpawnPosition.Location);
     Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
     // We only want to rotate it in the azimuth
@@ -88,6 +89,7 @@ void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnP
 void ATile::PlaceActor(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition)
 {
     APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
+    if (Spawned == nullptr) return;
     Spawned->SetActorRelativeLocation(SpawnPosition.Location);
     Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
     // We only want to rotate it in the azimuth
@@ -104,6 +106,7 @@ void ATile::BeginPlay()
 
 void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    if (Pool == nullptr || NavMeshBoundsVolume == nullptr) return;
     Pool->Return(NavMeshBoundsVolume);
 }
 
