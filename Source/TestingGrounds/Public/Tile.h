@@ -40,6 +40,12 @@ protected:
     
     UPROPERTY(EditDefaultsOnly, Category = Navigation)
     FVector NavigationBoundsOffset;
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Spawn Limits")
+    FVector MinBounds;
+    
+    UPROPERTY(EditDefaultsOnly, Category = "Spawn Limits")
+    FVector MaxBounds;
 
 public:	
 	// Called every frame

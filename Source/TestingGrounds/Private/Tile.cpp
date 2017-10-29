@@ -10,7 +10,6 @@ ATile::ATile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-    NavigationBoundsOffset = FVector(2000.f, 0.f, 0.f);
 
 }
 
@@ -61,9 +60,7 @@ void ATile::RandomlyPlaceActors(TSubclassOf<T> ToSpawn, int32 MinSpawn, int32 Ma
 
 bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
 {
-    FVector Min = FVector(0, -2000, 0);
-    FVector Max = FVector(4000, 2000, 0);
-    FBox Bounds(Min, Max);
+    FBox Bounds(MinBounds, MaxBounds);
     constexpr int32 MAX_ATTEMPTS = 100;
     for (int32 Index = 0; Index != MAX_ATTEMPTS; Index++) {
         FVector Location = FMath::RandPointInBox(Bounds);
